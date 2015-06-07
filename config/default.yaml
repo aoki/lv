@@ -1,0 +1,14 @@
+---
+follow:
+  local:
+    system  : /var/log/system.log
+    auth    : /var/log/authd.log
+    docker-busybox:
+      container : modest_wozniak
+  ringohub.com:
+    nginx   : /var/log/nginx/access.log
+    syslog  : /var/log/syslog
+    ufw     : /var/log/ufw.log
+    auth    : /var/log/auth.log
+    kibana  :
+      container : kibana
