@@ -1,6 +1,7 @@
 'use strict';
 
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var config = require('config');
@@ -12,6 +13,12 @@ util.dump(config);
 
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/index.html`);
+});
+
+app.use('/static', express.static('static'));
+app.use('/images', express.static('images'));
+app.get('/list', (req, res) => {
+  res.sendFile(`${__dirname}/list.html`);
 });
 
 io.on('connection', (socket) => {
