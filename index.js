@@ -21,8 +21,17 @@ app.get('/list', (req, res) => {
   res.sendFile(`${__dirname}/list.html`);
 });
 
+
+let listClients = (namespace, room, ioObj) => {
+  //Object.keys()
+  //for (var socketId in ) {
+  console.log(ioObj.nsps[namespace].adapter.rooms[room]);
+  //}
+};
+
 io.on('connection', (socket) => {
   console.log('a user connected');
+  //io.emit('logList', )
   io.emit('chat message', 'Connected new user.');
   socket.on('disconnect', () => {
     console.log('user disconnected');
@@ -32,7 +41,13 @@ io.on('connection', (socket) => {
     console.log(`message: ${msg}`);
     io.emit('chat message', msg);
   });
+
+  socket.on('join', (data) => {
+    socket.join(data.name);
+    listClients('/', data.room, io);
+  });
 });
+
 
 var spawn = require('child_process').spawn;
 
@@ -64,6 +79,9 @@ let tailSetup = (info) => {
   tail.stdout.on('data', (data) => {
     console.log(`REMOTE_DATA: ${data}`);
     io.emit('chat message', data.toString('UTF-8'));
+    util.dump(info);
+    io.to(`${info.host}/${info.key}`).emit('send', data.toString('UTF-8'));
+    //io.to('local/nginx').emit('send', data.toString('UTF-8'));
   });
 
   tail.stderr.on('data', (data) => {
@@ -76,7 +94,18 @@ let tailSetup = (info) => {
     console.log(`child process exited with code ${code}`);
   });
 };
-
+//
+//let followList = () => {
+//  let host2x = (host) => {
+//    Object.keys(config.follow[host]).forEach((k) => {
+//    }
+//  };
+//
+//  Object.keys(config.follow).reduce((host) => {
+//    Object.keys(config.follow[host]).forEach((acc, k) => {
+//      acc[]
+//    }, {});
+//}
 
 Object.keys(config.follow).forEach((host) => {
   Object.keys(config.follow[host]).forEach((k) => {

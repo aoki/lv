@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="/static/semantic.min.css"/>
   <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
   <script type="text/javascript" src="/static/semantic.min.js"></script>
+  <!--<script type="text/javascript" src="/static/socket.io/socket.io.js"></script>-->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
 </head>
 <body class="menu pushable">
 
@@ -29,7 +31,7 @@
     <div class="ui small inverted header">Local</div>
     <div class="menu">
 
-      <a class="item" href="">
+      <a class="item" href="" id="local/nginx">
         <span><i class="file outline icon"></i>nginx</span>
         <i class="circular teal plus icon"></i>
       </a>
@@ -64,6 +66,7 @@
           <h1 class="ui horizontal header">
             <i class="bar chart icon"></i> How to Use
           </h1>
+          <div id="log"></div>
         </div>
       </div>
     </div>
@@ -71,6 +74,23 @@
   </div>
 </div>
 
+<script>
+  var socket = io();
 
+  document.getElementById('local/nginx').addEventListener('click', function(e){
+    console.log('clicked !');
+    socket.emit('join', {
+      'host': 'ringohub.com',
+      'type': 'file',
+      'name': 'nginx' });
+    e.preventDefault();
+  });
+
+  socket.on('send', function(msg) {
+    var m = document.createElement('pre');
+    m.textContent = msg;
+    document.querySelector('#log').appendChild(m);
+  });
+</script>
 </body>
 </html>
