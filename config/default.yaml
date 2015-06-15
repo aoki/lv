@@ -1,27 +1,32 @@
 ---
+#follow:
+#  local:
+#    nginx  : /var/log/system.log
+##    system  : /var/log/system.log
+##    auth    : /var/log/authd.log
+##    docker-busybox:
+##      container : modest_wozniak
+#  ringohub.com:
+#    nginx   : /var/log/nginx/access.log
+##    syslog  : /var/log/syslog
+##    ufw     : /var/log/ufw.log
+##    auth    : /var/log/auth.log
+##    kibana  :
+##      container : kibana
+
+
 follow:
   local:
-    nginx  : /var/log/system.log
-#    system  : /var/log/system.log
-#    auth    : /var/log/authd.log
-#    docker-busybox:
-#      container : modest_wozniak
-  ringohub.com:
-    nginx   : /var/log/nginx/access.log
-#    syslog  : /var/log/syslog
-#    ufw     : /var/log/ufw.log
-#    auth    : /var/log/auth.log
-#    kibana  :
-#      container : kibana
-
-sample:
-  local:
-    - name: nginx
+    - name: system
       type: file
       path: /var/log/system.log
-    - name: jenkins
-      type: docker
-      path: /var/lib/jenkins
+    - name: auths
+      type: file
+      path: /var/log/authd.log
+  ringohub.com:
+    - name: nginx
+      type: file
+      path: /var/log/nginx/access.log
 
 
 

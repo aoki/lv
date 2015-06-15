@@ -31,6 +31,7 @@ let listClients = (namespace, room, ioObj) => {
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+  io.emit('log list', config.follow);
   //io.emit('logList', )
   io.emit('chat message', 'Connected new user.');
   socket.on('disconnect', () => {

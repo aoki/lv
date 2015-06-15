@@ -1,96 +1,86 @@
 <!DOCTYPE html>
 <html>
 <head lang="ja">
-  <meta charset="UTF-8">
-  <title></title>
-  <link rel="stylesheet" href="/static/semantic.min.css"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+  <title>Log Tail</title>
+  <!--<link rel="stylesheet" href="/static/semantic.min.css"/>-->
   <script type="text/javascript" src="//code.jquery.com/jquery-latest.min.js"></script>
-  <script type="text/javascript" src="/static/semantic.min.js"></script>
+  <!--<script type="text/javascript" src="/static/semantic.min.js"></script>-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">
+  <link rel="stylesheet" href="/static/css/main.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>
   <!--<script type="text/javascript" src="/static/socket.io/socket.io.js"></script>-->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
 </head>
-<body class="menu pushable">
 
-<div class="ui vertical inverted sidebar menu left uncover visible" id="toc">
-  <div class="item">
-    <a class="ui logo icon image" href="/">
-      <img src="/images/logo.png">
-    </a>
-    <a href="/"><b>Log Cat/Cat tail</b></a>
-  </div>
+<body>
 
-  <div class="item">
-    <div class="ui action left icon input">
-      <i class="search icon"></i>
-      <input type="text" placeholder="Search...">
-      <div class="ui teal button">Search</div>
-    </div>
-  </div>
+<header>
+  <ul id="slide-out" class="side-nav fixed">
 
-  <div class="item">
-    <div class="ui small inverted header">Local</div>
-    <div class="menu">
-
-      <a class="item" href="" id="local/nginx">
-        <span><i class="file outline icon"></i>nginx</span>
-        <i class="circular teal plus icon"></i>
+    <li class="logo teal lighten-2">
+      <a id="logo-container" href="#" class="brand-logo waves-effect waves-red">
+        <object id="front-page-logo" type="image/svg+xml" data="static/images/logo.svg">Your browser does not support SVG</object>
       </a>
-      <a class="item" href="">
-        <span><i class="file icon"></i>system</span>
-        <i class="circular inverted teal check icon"></i>
-      </a>
+    </li>
 
-    </div>
-  </div>
-
-  <div class="item">
-    <div class="ui small inverted header">Remote</div>
-    <div class="menu">
-
-      <a class="item" href="">
-        <span><i class="cube icon"></i>Kibana</span>
-      </a>
-      <a class="item" href="">
-        <span><i class="file outline icon"></i>syslog</span>
-      </a>
-
-    </div>
-  </div>
-
-</div>
-<div class="pusher">
-  <div class="full height">
-    <div class="header segment" style="padding-top: 70px; padding-left: 30px;">
-      <div class="container">
-        <div class="introduction">
-          <h1 class="ui horizontal header">
-            <i class="bar chart icon"></i> How to Use
-          </h1>
-          <div id="log"></div>
+    <li class="no-hover">
+      <form>
+        <div class="input-field">
+          <input id="search" type="search" required>
+          <label for="search"><i class="mdi-action-search"></i></label>
+          <i class="mdi-navigation-close"></i>
         </div>
-      </div>
-    </div>
+      </form>
+    </li>
 
-  </div>
-</div>
+    <li class="no-hover"><h5>Local</h5></li>
+    <li class="menu no-hover"><a href="#!">First Sidebar Link</a></li>
+    <li class="menu no-hover"><a href="#!">Second Sidebar Link</a></li>
+    <li class="no-hover"><h5>Remote</h5></li>
+    <li class="menu waves-effect waves-red"><a href="#!">Second Sidebar Link</a></li>
+    <li class="menu waves-effect waves-red"><a href="#!">Second Sidebar Link</a></li>
+
+  </ul>
+</header>
+
+<main>
+
+</main>
+
+<footer>
+
+</footer>
+
 
 <script>
+
   var socket = io();
 
-  document.getElementById('local/nginx').addEventListener('click', function(e){
+  document.getElementById('local/nginx').addEventListener('click', function (e) {
     console.log('clicked !');
     socket.emit('join', {
       'host': 'ringohub.com',
       'type': 'file',
-      'name': 'nginx' });
+      'name': 'nginx'
+    });
     e.preventDefault();
   });
 
-  socket.on('send', function(msg) {
+  socket.on('log list', function (logs) {
+    Object.keys(logs).forEach(function (host) {
+      // JSXで書きたい
+
+    });
+  });
+
+  socket.on('send', function (msg) {
     var m = document.createElement('pre');
     m.textContent = msg;
     document.querySelector('#log').appendChild(m);
   });
+
 </script>
 </body>
 </html>
