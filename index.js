@@ -44,8 +44,9 @@ io.on('connection', (socket) => {
   });
 
   socket.on('join', (data) => {
+    util.dump(data);
     socket.join(data.name);
-    listClients('/', data.room, io);
+    listClients('/', data.name, io);
   });
 });
 

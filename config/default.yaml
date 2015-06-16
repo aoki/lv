@@ -21,7 +21,7 @@ follow:
       type: file
       path: /var/log/system.log
     - name: auths
-      type: file
+      type: docker
       path: /var/log/authd.log
   ringohub.com:
     - name: nginx
