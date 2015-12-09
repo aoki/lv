@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head lang="ja">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+  <title>Log Tail</title>
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/css/materialize.min.css">-->
+  <link rel="stylesheet" href="../css/main.css">
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.96.1/js/materialize.min.js"></script>-->
+  <script type="text/javascript" src="..//js/main.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+</head>
+
+<body>
+
+
+
+<div class="container">
+  <header class="header">
+  </header>
+  <div class="contents">
+    <nav class="nav">
+      Navigator
+    </nav>
+    <main class="main">
+      <h1>contents</h1>
+    </main>
+  </div>
+  <footer class="footer">
+    fotter
+  </footer>
+</div>
+
+<script>
+
+  var socket = io('http://localhost:3000');
+
+  socket.on('log-list', function (logs) {
+    $('.host').remove();
+    $('.log-name').remove();
+    var menu = $('#slide-out');
+    Object.keys(logs).forEach(function (host) {
+      // JSXで書きたい
+      menu.append(
+        $('<li>').addClass('no-hover').addClass('host').append(
+          $('<h5>').text(host)
+        )
+      );
+      logs[host].forEach(function (log){
+        var tmp = $('<li>').addClass('no-hover').addClass('menu').addClass('log-name').text(log.name);
+        if (log.type === 'file') {
+          tmp.prepend('<i class="mdi-editor-insert-drive-file" style="font-size: 1.5rem"></i>');
+        } else if (log.type === 'docker') {
+          tmp.prepend('<i class="mdi-maps-directions-ferry" style="font-size: 1.5rem"></i>');
+        }
+        var domain = (host !== 'local') ? host.split('@')[1] : host;
+        var btn = $('<a id="log-btn-' + log.name + '" data-host="' + domain + '" data-logname="' + log.name + '" class="log-add waves-effect waves-light btn-floating blue"><i class="mdi-content-add" style="font-size: 1.5rem"></i></a>');
+
+        // 追加ボタンクリック時
+        btn.click( function (e) {
+          console.log('clicked !');
+          var ul = $('<ul>').attr('id', log.name + '-' + domain.replace(/\./, '_'));
+          var div = $('<div>').addClass('container').addClass('log-box');
+          $('#log-panel').append(div.append(ul));
+          socket.emit('join', {
+            'host': domain,
+            'name': log.name
+          });
+          e.preventDefault();
+        });
+        tmp.append(btn);
+        menu.append(tmp);
+      });
+
+    });
+  });
+
+  socket.on('tail-error', function(msg) {
+    console.log(msg);
+  });
+
+//  socket.on('send', function (msg) {
+//    var m = document.createElement('pre');
+//    m.textContent = msg;
+//    document.querySelector('#log').appendChild(m);
+//  });
+
+  socket.on('send', function(logData) {
+    console.log('EMIT SEND');
+    console.dir(logData);
+
+    var m = document.createElement('li');
+//    m.textContent = logData.msg;
+    m.textContent = decodeURIComponent(logData.msg);
+    document.querySelector('#' + logData.info.name + '-' + logData.host.replace(/\./, '_')).appendChild(m);
+  });
+
+</script>
+</body>
+</html>
